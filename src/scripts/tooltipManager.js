@@ -4,6 +4,8 @@ export class TooltipManager {
 	constructor() {
 		this.tooltip = document.getElementById('tooltip');
 		this.techItems = document.querySelectorAll('.tech-item');
+		this.isTooltipHovered = false;
+		this.hideTimeout = null;
 		this.init();
 	}
 
@@ -13,9 +15,23 @@ export class TooltipManager {
 			item.addEventListener('mouseleave', this.handleMouseLeave.bind(this));
 			item.addEventListener('mousemove', this.handleMouseMove.bind(this));
 		});
+
+		// Add event listeners for the tooltip itself
+		this.tooltip.addEventListener('mouseenter', (e) => {
+			e.stopPropagation();
+			this.isTooltipHovered = true;
+			clearTimeout(this.hideTimeout);
+		});
+
+		this.tooltip.addEventListener('mouseleave', (e) => {
+			e.stopPropagation();
+			this.isTooltipHovered = false;
+			this.hideTooltip();
+		});
 	}
 
 	handleMouseEnter(e) {
+		clearTimeout(this.hideTimeout);
 		const techKey = e.currentTarget.getAttribute('data-tech');
 		if (techData[techKey]) {
 			const data = techData[techKey];
@@ -29,8 +45,19 @@ export class TooltipManager {
 		}
 	}
 
-	handleMouseLeave() {
-		this.tooltip.style.display = 'none';
+	handleMouseLeave(e) {
+		// Only hide if we're not hovering over the tooltip
+		if (!this.isTooltipHovered) {
+			this.hideTooltip();
+		}
+	}
+
+	hideTooltip() {
+		this.hideTimeout = setTimeout(() => {
+			if (!this.isTooltipHovered) {
+				this.tooltip.style.display = 'none';
+			}
+		}, 300); // 300ms delay to give time to reach the tooltip
 	}
 
 	handleMouseMove(e) {

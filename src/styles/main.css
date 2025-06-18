@@ -142,7 +142,6 @@ body {
 	font-size: var(--text-sm);
 	z-index: 50;
 	max-width: 320px;
-	pointer-events: none;
 	box-shadow: var(--shadow-lg);
 }
 
