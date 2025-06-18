@@ -1,3 +1,5 @@
+import { TooltipManager } from './tooltipManager.js';
+
 // Data structures for the architecture components
 const architectureData = {
 	tiers: [
